@@ -1,0 +1,15 @@
+title,company,skills
+Machine Learning Intern,AI Labs,python|machine learning|sql
+Machine Learning Engineer,AI Labs,python|tensorflow|deep learning
+Data Analyst,Insight Ltd,sql|excel|data analysis
+Junior Data Analyst,Insight Ltd,sql|excel|reporting
+Backend Developer,TechCore,python|django|sql|api
+Senior Backend Developer,TechCore,python|flask|sql|api
+Frontend Developer,WebWorks,react|javascript|css|html
+UI Developer,WebWorks,react|css|html|ui design
+Full Stack Developer,CodeBase,react|nodejs|sql|javascript
+Cloud Engineer,CloudNet,aws|docker|linux|python
+DevOps Engineer,CloudNet,docker|kubernetes|linux|aws
+Data Scientist,DataCorp,python|pandas|machine learning|statistics
+Business Analyst,ConsultPro,excel|sql|reporting|analysis
+Software Engineer,DevHub,java|spring|sql|api
