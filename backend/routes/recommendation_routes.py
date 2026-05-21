@@ -24,6 +24,7 @@ def recommend_jobs(student_id):
 
         student_skill_rows = cursor.fetchall()
 
+        # Remove duplicate student skills and convert to lowercase
         student_skills = list(dict.fromkeys(
             row["skill_name"].strip().lower()
             for row in student_skill_rows
@@ -69,9 +70,11 @@ def recommend_jobs(student_id):
                     "skills": []
                 }
 
-            jobs_dict[job_id]["skills"].append(
-                row["skill_name"].strip().lower()
-            )
+            # Prevent duplicate skills from being added to the same job
+            skill_name = row["skill_name"].strip().lower()
+
+            if skill_name not in jobs_dict[job_id]["skills"]:
+                jobs_dict[job_id]["skills"].append(skill_name)
 
         jobs = list(jobs_dict.values())
 
@@ -80,16 +83,17 @@ def recommend_jobs(student_id):
                 "error": "No jobs with skills found"
             }), 404
 
-        # 3. Generate recommendations using your service
+        # 3. Generate recommendations using recommendation service
         recommendations = generate_recommendations(student_skills, jobs)
 
         enriched_recommendations = []
 
         for rec in recommendations:
-            job_skills = [
+            # Clean job skills again for safety
+            job_skills = list(dict.fromkeys(
                 skill.strip().lower()
                 for skill in rec.get("skills", [])
-            ]
+            ))
 
             matched_skills = [
                 skill for skill in student_skills
@@ -182,10 +186,11 @@ def get_saved_recommendations(student_id):
 
         student_skill_rows = cursor.fetchall()
 
-        student_skills = [
+        # Remove duplicate student skills
+        student_skills = list(dict.fromkeys(
             row["skill_name"].strip().lower()
             for row in student_skill_rows
-        ]
+        ))
 
         # Get saved/generated recommendations
         cursor.execute("""
@@ -226,10 +231,11 @@ def get_saved_recommendations(student_id):
 
             job_skill_rows = cursor.fetchall()
 
-            job_skills = [
+            # Remove duplicate job skills
+            job_skills = list(dict.fromkeys(
                 row["skill_name"].strip().lower()
                 for row in job_skill_rows
-            ]
+            ))
 
             matched_skills = [
                 skill for skill in student_skills

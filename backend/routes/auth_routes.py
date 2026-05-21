@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models.db import get_db_connection
+from werkzeug.security import generate_password_hash, check_password_hash
 
 auth_bp = Blueprint("auth_bp", __name__)
 
@@ -27,6 +28,9 @@ def register():
     if role not in ["student", "publisher"]:
         role = "student"
 
+    # Hash password before saving it to the database
+    hashed_password = generate_password_hash(password)
+
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -43,11 +47,11 @@ def register():
                 "error": "Email already exists"
             }), 409
 
-        # Insert user into students table
+        # Insert user with hashed password, not plain password
         cursor.execute("""
             INSERT INTO students (full_name, email, password, role)
             VALUES (%s, %s, %s, %s)
-        """, (full_name, email, password, role))
+        """, (full_name, email, hashed_password, role))
 
         conn.commit()
 
@@ -92,15 +96,17 @@ def login():
     cursor = conn.cursor(dictionary=True)
 
     try:
+        # Get user by email only
         cursor.execute("""
             SELECT student_id, full_name, email, password, role
             FROM students
-            WHERE email = %s AND password = %s
-        """, (email, password))
+            WHERE email = %s
+        """, (email,))
 
         user = cursor.fetchone()
 
-        if not user:
+        # Check password against the hashed password stored in database
+        if not user or not check_password_hash(user["password"], password):
             return jsonify({
                 "error": "Invalid email or password"
             }), 401
@@ -139,6 +145,9 @@ def forgot_password():
             "error": "Email and new password are required"
         }), 400
 
+    # Hash new password before updating database
+    hashed_password = generate_password_hash(new_password)
+
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -155,12 +164,12 @@ def forgot_password():
                 "error": "Email not found"
             }), 404
 
-        # Update password
+        # Update password with hashed password
         cursor.execute("""
             UPDATE students
             SET password = %s
             WHERE email = %s
-        """, (new_password, email))
+        """, (hashed_password, email))
 
         conn.commit()
 
