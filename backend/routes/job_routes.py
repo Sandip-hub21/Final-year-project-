@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from models.db import get_db_connection
+from routes.application_routes import application_bp
 
 # Blueprint for all job, application, publisher, and admin-related routes
 job_bp = Blueprint("job_bp", __name__)

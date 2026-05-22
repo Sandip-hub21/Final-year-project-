@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models.db import get_db_connection
+from routes.application_routes import application_bp
 
 student_bp = Blueprint("student_bp", __name__)
 

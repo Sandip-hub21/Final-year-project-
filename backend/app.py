@@ -6,6 +6,7 @@ from routes.auth_routes import auth_bp
 from routes.student_routes import student_bp
 from routes.job_routes import job_bp
 from routes.recommendation_routes import recommendation_bp
+from routes.application_routes import application_bp
 
 # Create Flask app
 app = Flask(__name__)
@@ -23,7 +24,7 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(student_bp)
 app.register_blueprint(job_bp)
 app.register_blueprint(recommendation_bp)
-
+app.register_blueprint(application_bp)
 
 # =========================================================
 # HOME ROUTE

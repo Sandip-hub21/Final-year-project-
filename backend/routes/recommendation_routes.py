@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify
 from models.db import get_db_connection
 from services.recommendation_service import generate_recommendations
+from routes.application_routes import application_bp
 
 recommendation_bp = Blueprint("recommendation_bp", __name__)
 
